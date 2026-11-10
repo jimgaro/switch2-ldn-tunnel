@@ -1,0 +1,74 @@
+SWITCH 2 / USB WI-FI - EMPEZAR AQUI
+
+ESTADO
+Proyecto experimental. Diagnostico y transporte implementados; tunel jugable
+entre consolas sin validar. Driver instalado o monitor no equivalen a juego.
+
+DOCUMENTOS
+README.md: resumen y requisitos.
+GUIA_EJECUCION.md: preparacion, permisos, comandos y recuperacion completos.
+TPLINK.md: TL-WN725N y paquetes Windows 10/11 y Linux.
+USB_WIFI.md: diagnostico general y resultados.
+AGENTS.md: instrucciones para una IA que continue el proyecto.
+
+1. PREPARAR
+Extrae todo el ZIP y abre una terminal en la carpeta con pyproject.toml.
+Necesitas Python 3.10 o posterior. Comprueba python --version en Windows
+o python3 --version en Linux. No ejecutes desde dentro del ZIP.
+Windows puede diagnosticar e instalar drivers. La radio requiere Linux,
+directamente o en una VM Ubuntu con el USB asignado al invitado.
+La prueba anterior uso Ubuntu en VirtualBox sobre Windows.
+Para diagnosticar basta un PC; para juego hacen falta dos consolas, dos
+radios y dos extremos Linux, con Internet por otra interfaz.
+
+2. CONSULTAR USB SIN CAMBIAR NADA (usuario normal)
+Windows:
+  python -m switch2_tunnel.doctor
+Linux:
+  python3 -m switch2_tunnel.doctor
+Si es TL-WN725N confirmado en la etiqueta, agrega --model TL-WN725N.
+Anota USB ID e interfaz. Esta consulta no descarga ni cambia la radio.
+
+3. INSTALAR EL PROYECTO (usuario normal)
+Windows:
+  python -m venv .venv
+  .\.venv\Scripts\python.exe -m pip install .
+Linux:
+  python3 -m venv .venv
+  .venv/bin/python -m pip install .
+No hace falta activar el entorno ni cambiar la politica de PowerShell.
+En Ubuntu prepara antes las herramientas de GUIA_EJECUCION.md.
+
+4. REPARAR SOLO SI FALTA EL CONTROLADOR
+Windows: PowerShell como administrador en la carpeta del proyecto.
+Ejemplo SOLO si la etiqueta del TL-WN725N dice Ver: 3.0:
+  .\.venv\Scripts\python.exe -m switch2_tunnel.doctor --model TL-WN725N --revision 3.0 --repair
+Para V2/V2.0 cambia a --revision 2.0 y sigue el mensaje de instalacion manual.
+No adivines la revision ni apliques V3 a otras versiones.
+Linux:
+  sudo .venv/bin/python -m switch2_tunnel.doctor --model TL-WN725N --repair
+Se usan primero drivers locales. Si no puede resolverlo, el mensaje indica
+que instalar manualmente. No se reinicia el PC automaticamente.
+
+5. PROBAR RED ANTES DE RADIO
+Etapa 4 de GUIA_EJECUCION.md: tres terminales, coordinador y agentes A/B.
+No requiere administrador, USB ni consolas. A comparte su codigo temporal,
+B lo introduce y A confirma con s. Compara huellas y comprueba el RTT.
+Para Internet: servidor HTTPS y entrada TCP 8765 / UDP 8766 en el coordinador.
+Los agentes necesitan salida hacia el. No desactives TLS.
+
+6. PROBAR RADIO Y CONSOLAS
+Etapas 6 y 7 de GUIA_EJECUCION.md: Linux/root, radio dedicada, frecuencia
+medida e Internet por otra interfaz. La prueba pasiva crea y elimina un
+monitor temporal; el ensayo con agentes transmite tramas.
+No bajes tu interfaz de Internet ni reutilices el monitor temporal del test.
+El exito final exige jugadores visibles y una operacion real completada.
+
+7. TERMINAR
+Ctrl+C en agentes y coordinador. Restaura modo y gestion de red iniciales
+como indica la etapa 8. No publiques claves privadas, bases de sesiones
+ni informes sin revisarlos.
+
+PARA IA
+Lee AGENTS.md antes de operar. Estos ejemplos no son una orden para
+ejecutar todas las operaciones sobre el equipo.

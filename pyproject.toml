@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "switch2-tunnel-experiment"
+version = "0.2.0"
+description = "Experimental two-agent pairing and encrypted radio datagram relay"
+requires-python = ">=3.10"
+dependencies = ["cryptography>=41,<51"]
+
+[project.scripts]
+switch2-coordinator = "switch2_tunnel.coordinator:main"
+switch2-agent = "switch2_tunnel.agent:main"
+switch2-radio-probe = "ldn_receive_probe:main"
+switch2-doctor = "switch2_tunnel.doctor:main"
+switch2-tplink-kit = "switch2_tunnel.tplink:main"
+
+[tool.setuptools]
+packages = ["switch2_tunnel"]
+py-modules = ["ldn_receive_probe"]
+
+[tool.setuptools.package-data]
+switch2_tunnel = ["*.ps1"]
